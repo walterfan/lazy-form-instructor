@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Form API Test</h1>
+    
+    <h2>Test Leave Request Parsing</h2>
+    <button onclick="testLeaveRequest()">Test Leave Request</button>
+    
+    <h2>Test Task Request Parsing</h2>
+    <button onclick="testTaskRequest()">Test Task Request</button>
+    
+    <h2>Response:</h2>
+    <div id="response"></div>
+    
+    <script>
+        const API_URL = 'http://localhost:8080/api/forms';
+        
+        async function testLeaveRequest() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/parse`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        formType: 'leave',
+                        userInput: "I'm getting married next month! I'd like to take a week off starting from December 15th."
+                    })
+                });
+                
+                const data = await response.json();
+                
+                responseDiv.innerHTML = `
+                    <p class="success">✅ Success! Status: ${response.status}</p>
+                    <h3>Parsed Fields:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    
+                    <h3>Field Names Received:</h3>
+                    <pre>${JSON.stringify(Object.keys(data.fields), null, 2)}</pre>
+                    
+                    <h3>Sample Field Structure:</h3>
+                    <pre>${JSON.stringify(data.fields[Object.keys(data.fields)[0]], null, 2)}</pre>
+                `;
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <p class="error">❌ Error: ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        }
+        
+        async function testTaskRequest() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/parse`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        formType: 'task',
+                        userInput: "tomorrow is monday, I have to finish the sending alert feature ASAP, the release date is next friday"
+                    })
+                });
+                
+                const data = await response.json();
+                
+                responseDiv.innerHTML = `
+                    <p class="success">✅ Success! Status: ${response.status}</p>
+                    <h3>Parsed Fields:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    
+                    <h3>Field Names Received:</h3>
+                    <pre>${JSON.stringify(Object.keys(data.fields), null, 2)}</pre>
+                `;
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <p class="error">❌ Error: ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        }
+        
+        // Test on load
+        window.addEventListener('load', () => {
+            console.log('API Test Page Loaded');
+            console.log('Backend should be running at:', API_URL);
+        });
+    </script>
+</body>
+</html>
+

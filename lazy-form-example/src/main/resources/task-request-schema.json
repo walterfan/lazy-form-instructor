@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Task identifier"
+    },
+    "realm_id": {
+      "type": "string",
+      "description": "Realm / tenant identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Short task name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the task"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 2,
+      "description": "Priority level (1=lowest, 5=highest)"
+    },
+    "difficulty": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 2,
+      "description": "Difficulty level"
+    },
+    "status": {
+      "type": "string",
+      "default": "pending",
+      "description": "Task status"
+    },
+    "schedule_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user plans to work on the task"
+    },
+    "minutes": {
+      "type": "integer",
+      "description": "Estimated effort in minutes"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Deadline for completing the task"
+    },
+    "start_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Actual start time (optional)"
+    },
+    "end_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Actual end time (optional)"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags"
+    }
+  },
+  "required": ["name", "schedule_time", "deadline"]
+}
+

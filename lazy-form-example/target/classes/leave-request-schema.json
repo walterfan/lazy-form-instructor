@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "leave_type": {
+      "type": "string",
+      "enum": ["annual", "sick", "unpaid"],
+      "description": "Type of leave request"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of leave"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of leave"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for leave"
+    },
+    "medical_certificate": {
+      "type": "string",
+      "description": "Medical certificate if required"
+    },
+    "approver": {
+      "type": "string",
+      "description": "Person who will approve the leave"
+    }
+  },
+  "required": ["leave_type", "start_date", "end_date", "reason"]
+}
+
