@@ -40,7 +40,7 @@ echo ""
 
 # Build the main library
 print_step "Building LazyFormInstructor library..."
-cd lazy-form-instructor
+cd instructor
 
 if mvn clean install -DskipTests; then
     print_success "LazyFormInstructor library built successfully"
@@ -54,7 +54,7 @@ echo ""
 
 # Build the examples
 print_step "Building LazyFormInstructor examples..."
-cd lazy-form-example
+cd example/cli-demo
 
 if mvn clean compile; then
     print_success "LazyFormInstructor examples built successfully"
@@ -68,7 +68,7 @@ echo ""
 
 # Run tests
 print_step "Running tests..."
-cd lazy-form-instructor
+cd instructor
 
 if mvn test; then
     print_success "All tests passed"

@@ -57,7 +57,7 @@ run_leave_request() {
     print_info "Running: LeaveRequestExample"
     echo ""
     
-    cd lazy-form-example
+    cd example/cli-demo
     mvn exec:java -Dexec.mainClass="com.fanyamin.example.LeaveRequestExample" -q
     local exit_code=$?
     cd ..
@@ -80,8 +80,8 @@ run_task_request() {
     print_header "Task Request Example"
     print_info "Running: TaskRequestExample"
     echo ""
-    
-    cd lazy-form-example
+
+    cd example/cli-demo
     mvn exec:java -Dexec.mainClass="com.fanyamin.example.TaskRequestExample" -q
     local exit_code=$?
     cd ..
@@ -106,7 +106,7 @@ run_all() {
 }
 
 # Check if project is built
-if [ ! -f "lazy-form-instructor/target/lazy-form-instructor-0.0.1-SNAPSHOT.jar" ]; then
+if [ ! -f "instructor/target/lazy-form-instructor-0.0.1-SNAPSHOT.jar" ]; then
     print_error "Project not built. Please run ./build.sh first."
     exit 1
 fi
