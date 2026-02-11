@@ -1,4 +1,4 @@
-# LazyFormInstructor - LLM-driven Lazy Form Engine
+# Lazy Form Instructor - LLM-driven Form Engine
 
 一个工程级、可复用、可扩展的 Java 库，用于从 LLM 中提取结构化数据，并内置验证、置信度评分和重试逻辑。灵感来自 Python 的 `instructor`。
 
@@ -10,7 +10,7 @@
 
 ## 核心特性
 
-### LazyFormInstructor - 智能表单解析器, 用于表单的填写
+### LazyFormInstructor - 懒得填表单解析器, 用于表单的填写
 
 - **Schema-First (模式驱动)**: 使用标准 JSON Schema 定义数据结构。
 - **Decoupled (解耦设计)**: 将表单结构定义 (Business Logic) 与自然语言解析 (AI Logic) 分离。
@@ -639,7 +639,7 @@ Answer strictly in JSON.
 
 ## License
 
-MIT
+Apache-2.0 license
 
 ---
 
