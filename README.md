@@ -20,15 +20,6 @@
 - **Complex Forms (复杂表单)**: 支持嵌套对象、数组和复杂的跨字段约束。
 - **Context-Aware (上下文感知)**: 使用 `Intent Context` (用户资料、历史、环境) 来推断默认值。
 
-### LazyFormWorkflow - AI驱动工作流引擎, 用于请求的审核
-
-- **DAG工作流**: 基于有向无环图的工作流定义，支持复杂的分支逻辑
-- **AI决策节点**: 使用LLM进行语义决策（审批/拒绝、路由选择）
-- **混合模式**: 结合确定性节点（代码逻辑）和AI节点（语义理解）
-- **循环检测**: 自动验证工作流图，防止死循环
-- **执行追踪**: 完整的审计跟踪，记录所有节点执行历史
-- **置信度阈值**: 低置信度决策自动升级到人工审核
-
 ---
 
 ## 通用智能表单协议 (Universal Smart Form Protocol - USFP)
@@ -189,72 +180,29 @@ public class LeaveRequestForm {
 ### 项目结构
 
 ```
-smart-form-instructor/
-├── smart-form-instructor/           # 核心库
+lazy-form-instructor/
+├── instructor/                      # 核心库
 │   ├── src/main/java/com/fanyamin/
-│   │   ├── SmartFormInstructor.java # 主引擎类
-│   │   ├── instructor/
-│   │   │   ├── api/                 # 核心数据模型
-│   │   │   │   ├── ParsingRequest.java   # 输入模型
-│   │   │   │   ├── ParsingResult.java    # 输出模型
-│   │   │   │   ├── FieldResult.java      # 字段结果
-│   │   │   │   └── ValidationError.java  # 验证错误
-│   │   │   ├── schema/
-│   │   │   │   ├── SchemaValidator.java  # JSON Schema 验证器
-│   │   │   │   └── SchemaGenerator.java  # DTO生成Schema
-│   │   │   └── llm/
-│   │   │       ├── LlmClient.java         # LLM 客户端接口
-│   │   │       ├── SpringAiLlmClient.java # Spring AI 实现
-│   │   │       ├── OpenAiLlmClient.java   # OpenAI兼容实现
-│   │   │       ├── MockLlmClient.java     # 测试用 Mock
-│   │   │       └── PromptManager.java     # 提示模板管理
+│   │   ├── LazyFormInstructor.java  # 主引擎类
+│   │   └── instructor/
+│   │       ├── api/                 # 核心数据模型
+│   │       ├── schema/              # JSON Schema 生成与验证
+│   │       ├── llm/                 # LLM 客户端与提示管理
+│   │       └── streaming/           # 流式解析事件
 │   └── pom.xml
-├── smart-form-example/              # 命令行示例
-│   ├── src/main/java/com/fanyamin/example/
-│   │   ├── LeaveRequestExample.java
-│   │   └── TaskRequestExample.java
-│   └── pom.xml
-├── smart-form-workflow/             # 🆕 AI驱动工作流引擎
-│   ├── src/main/java/com/fanyamin/workflow/
-│   │   ├── core/                    # 核心抽象
-│   │   │   ├── WorkflowContext.java # 上下文黑板
-│   │   │   ├── WorkflowNode.java    # 节点接口
-│   │   │   ├── WorkflowEdge.java    # 边缘连接
-│   │   │   ├── WorkflowGraph.java   # DAG图
-│   │   │   └── WorkflowEngine.java  # 执行引擎
-│   │   └── node/                    # 节点实现
-│   │       ├── StartNode.java       # 开始节点
-│   │       ├── EndNode.java         # 结束节点
-│   │       ├── ActionNode.java      # 操作节点
-│   │       ├── LogicDecisionNode.java  # 逻辑决策
-│   │       └── AiDecisionNode.java  # AI决策节点
-│   ├── README.md
-│   └── pom.xml
-├── smart-form-workflow-example/     # 工作流示例
-│   ├── src/main/java/com/fanyamin/workflow/example/
-│   │   └── LeaveRequestWorkflowExample.java
-│   └── pom.xml
-├── smart-form-web/                  # 🆕 Web应用 (Spring Boot + Vue.js)
-│   ├── src/main/java/com/fanyamin/web/
-│   │   ├── SmartFormWebApplication.java
-│   │   ├── controller/              # REST API
-│   │   ├── config/                  # Spring配置
-│   │   └── dto/                     # 数据传输对象
-│   ├── frontend/                    # Vue.js 3 + TypeScript前端
-│   │   ├── src/
-│   │   │   ├── App.vue              # 主应用组件
-│   │   │   ├── components/          # Vue组件
-│   │   │   ├── api.ts               # API客户端
-│   │   │   └── types.ts             # TypeScript类型
-│   │   ├── package.json
-│   │   └── vite.config.ts
-│   ├── pom.xml
-│   ├── start.sh                     # 启动脚本
-│   └── README.md
+├── example/
+│   ├── cli-demo/                    # 命令行示例
+│   │   ├── src/main/java/com/fanyamin/example/
+│   │   └── pom.xml
+│   └── web-demo/                    # Web 应用示例 (Spring Boot + Vue.js)
+│       ├── src/main/java/com/fanyamin/web/
+│       ├── frontend/
+│       ├── pom.xml
+│       └── README.md
+├── .github/workflows/               # CI/CD workflows
 ├── README.md                        # 主文档
 ├── build.sh                         # 构建脚本
-├── run-demo.sh                      # 运行表单演示
-└── run-workflow-example.sh          # 🆕 运行工作流演示
+└── run-demo.sh                      # 运行命令行演示
 ```
 
 ---
@@ -275,13 +223,13 @@ LLM_MODEL=gpt-4-turbo-preview
 
 2. 启动应用:
 ```bash
-cd lazy-form-web
+cd example/web-demo
 ./start.sh
 ```
 
 3. 打开浏览器: `http://localhost:5173`
 
-详细信息请查看 [lazy-form-web/README.md](lazy-form-web/README.md) 或 [lazy-form-web/QUICKSTART.md](lazy-form-web/QUICKSTART.md)
+详细信息请查看 [example/web-demo/README.md](example/web-demo/README.md)
 
 ### 方式二：命令行示例 💻
 
@@ -299,19 +247,6 @@ cd lazy-form-web
 ./run-demo.sh
 ```
 
-#### 工作流引擎示例 🆕
-
-运行AI驱动的请假申请工作流:
-```bash
-./run-workflow-example.sh
-```
-
-该示例展示:
-- 使用SmartFormInstructor解析自然语言请假请求
-- AI节点验证请假理由的合理性
-- 基于置信度的自动审批或人工审核路由
-- 完整的执行追踪和决策推理
-
 ### 方式三：作为库集成 📚
 
 **集成到你自己的项目**
@@ -321,7 +256,7 @@ cd lazy-form-web
 ```xml
 <dependency>
     <groupId>com.fanyamin</groupId>
-    <artifactId>smart-form-instructor</artifactId>
+    <artifactId>lazy-form-instructor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
@@ -347,7 +282,7 @@ cd lazy-form-web
 // 使用 Spring AI ChatClient
 ChatClient chatClient = ...;
 LlmClient llmClient = new SpringAiLlmClient(chatClient);
-SmartFormInstructor instructor = new SmartFormInstructor(llmClient);
+LazyFormInstructor instructor = new LazyFormInstructor(llmClient);
 ```
 
 #### 3. 解析自然语言
@@ -647,4 +582,4 @@ Apache-2.0 license
 
 欢迎贡献代码、提出 issue 或改进建议！
 
-如果您在使用中遇到问题，请查看 [文档](./smart-form-instructor/README.md) 或提交 issue。
+如果您在使用中遇到问题，请查看 [文档](./instructor/README.md) 或提交 issue。
